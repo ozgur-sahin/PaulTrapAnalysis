@@ -196,6 +196,23 @@ class MultipoleControl:
             output_roi.append(self.electrode_potential_regenerated[key] * vs[key])
 
         return sum(output_roi)
+    
+    def write_txt(self,filename,strs,excl):
+        outarray = []
+        allmpl = ['Ex', 'Ey', 'Ez','U1', 'U2', 'U3', 'U4','U5']
+        for multipole in allmpl:
+            if multipole in self.pinv_matrix:
+                for key in strs:
+                    if key not in excl:
+                        outarray = np.append(outarray, self.pinv_matrix[multipole][key])
+                    elif excl[key] != "gnd":
+                        outarray = np.append(outarray, self.pinv_matrix[multipole][excl[key]])
+                    else:
+                        outarray = np.append(outarray, 0)
+            else:
+                outarray = np.append(outarray,np.zeros(21))
+        print(np.shape(outarray))
+        pd.DataFrame(outarray).to_csv(filename+'.txt', header=None, index=None, float_format='%.15f')
 
     @staticmethod
     def min_linf(y, X):

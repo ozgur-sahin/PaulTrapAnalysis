@@ -1,0 +1,7 @@
+.DS_Store
+*.pyc
+*.vtk
+build/*
+.DS_Store
+**/__pycache__/
+*.pkl
